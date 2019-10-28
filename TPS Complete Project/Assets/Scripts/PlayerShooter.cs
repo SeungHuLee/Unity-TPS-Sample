@@ -19,9 +19,6 @@ public class PlayerShooter : MonoBehaviour
     private Animator playerAnimator; // 애니메이터 컴포넌트
     private Camera playerCamera;
     
-    private float waitingTimeForReleasingAim = 2.5f;
-    private float lastFireInputTime; 
-    
     private Vector3 aimPoint;
     private bool linedUp => !(Mathf.Abs( playerCamera.transform.eulerAngles.y - transform.eulerAngles.y) > 1f);
     private bool hasEnoughDistance => !Physics.Linecast(transform.position + Vector3.up * gun.fireTransform.position.y,gun.fireTransform.position, ~excludeTarget);
@@ -43,14 +40,12 @@ public class PlayerShooter : MonoBehaviour
 
     private void OnEnable()
     {
-        aimState = AimState.Idle;
         gun.gameObject.SetActive(true);
         gun.Setup(this);
     }
 
     private void OnDisable()
     {
-        aimState = AimState.Idle;
         gun.gameObject.SetActive(false);
     }
 
@@ -58,7 +53,6 @@ public class PlayerShooter : MonoBehaviour
     {
         if (playerInput.fire)
         {
-            lastFireInputTime = Time.time;
             Shoot();
         }
         else if (playerInput.reload)
@@ -78,11 +72,6 @@ public class PlayerShooter : MonoBehaviour
         
         playerAnimator.SetFloat("Angle", angle);
 
-        if (!playerInput.fire && Time.time >= lastFireInputTime + waitingTimeForReleasingAim)
-        {
-            aimState = AimState.Idle;
-        }
-        
         UpdateUI();
     }
 

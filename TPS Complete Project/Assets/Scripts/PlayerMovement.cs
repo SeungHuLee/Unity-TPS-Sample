@@ -4,7 +4,6 @@ public class PlayerMovement : MonoBehaviour
 {
     private CharacterController characterController;
     private PlayerInput playerInput;
-    private PlayerShooter playerShooter;
     private Animator animator;
     
     private Camera followCam;
@@ -30,12 +29,11 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<PlayerInput>();
         followCam = Camera.main;
         characterController = GetComponent<CharacterController>();
-        playerShooter = GetComponent<PlayerShooter>();
     }
 
     private void FixedUpdate()
     {
-        if (currentSpeed > 0.2f || playerInput.fire || playerShooter.aimState == PlayerShooter.AimState.HipFire) Rotate();
+        if (currentSpeed > 0.2f || playerInput.fire) Rotate();
 
         Move(playerInput.moveInput);
         
